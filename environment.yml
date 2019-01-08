@@ -1,0 +1,7 @@
+# conda env create -f environment.yml
+name: emg_force_analysis
+
+dependencies:
+  - python==3.6.5
+  - matplotlib==2.2.2
+  - numpy==1.15
