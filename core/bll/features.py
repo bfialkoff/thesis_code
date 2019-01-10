@@ -18,3 +18,11 @@ class Features:
     def get_average_force_signal(self, force):
         averaged_force_signal = self._get_sliding_window_signal(force, np.mean)
         return averaged_force_signal
+
+    def get_shifted_fft_and_frequency(self, sampling_frequency, signal):
+        dft = np.abs(np.fft.fft(signal))
+        len_dft = len(dft)
+        discrete_frequency = np.arange(0, len_dft)
+        discrete_frequency[round(len_dft / 2):] = discrete_frequency[round(len_dft / 2):] - len_dft
+        time_frequency = (sampling_frequency / len_dft) * discrete_frequency
+        return time_frequency, dft

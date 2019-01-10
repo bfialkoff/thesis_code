@@ -1,4 +1,6 @@
 # conda env create -f environment.yml
+# conda remove --name emg_force_analysis
+# conda info --envs
 name: emg_force_analysis
 
 dependencies:

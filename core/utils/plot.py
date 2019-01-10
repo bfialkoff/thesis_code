@@ -1,10 +1,20 @@
+from math import pi
+
 import matplotlib.pyplot as plt
 import numpy as np
 
-def line(array, title=None, x_label=None, y_label=None):
-    fig, axes1 = plt.subplots(1, 1)
-    axes1.plot(array)
+from core.bll.features import Features
 
+two_pi = 2 * pi
+
+
+def line(array, x_axis=None, title=None, x_label=None, y_label=None):
+    fig, axes1 = plt.subplots(1, 1)
+
+    if x_axis is not None:
+        axes1.plot(x_axis, array)
+    else:
+        axes1.plot(array)
     if title:
         plt.title(title)
     if x_label:
@@ -13,6 +23,7 @@ def line(array, title=None, x_label=None, y_label=None):
         plt.ylabel(y_label)
 
     plt.show()
+
 
 def scatter(emg, force, title=None, x_label=None, y_label=None):
     fig, ax = plt.subplots(1, 1)
@@ -27,19 +38,18 @@ def scatter(emg, force, title=None, x_label=None, y_label=None):
 
     plt.show()
 
-def frequency_spectrum(array, x_values=None):
-    dft = np.fft.fft(array)
+
+def frequency_spectrum(sampling_frequency, array):
+    time_frequency, dft = Features().get_shifted_fft_and_frequency(sampling_frequency, array)
     fig, axes1 = plt.subplots(1, 1)
-    if x_values is None:
-        axes1.plot(np.abs(dft))
-    else:
-        axes1.plot(x_values, (dft))
+    axes1.plot(time_frequency, np.abs(dft))
     plt.show()
+
 
 def plot_emg_force(force, emg):
     time = range(len(force))
 
-    fig, axes1 = plt.subplots(1,1)
+    fig, axes1 = plt.subplots(1, 1)
 
     axes1.plot(time, force, 'r', label='force graph')
     axes1.tick_params('y', colors='r')
@@ -59,11 +69,11 @@ def plot_emg_force(force, emg):
 def plot_emg_force_all_sensors(force, emg):
     time = range(len(force))
 
-    fig, axes = plt.subplots(2,4)
+    fig, axes = plt.subplots(2, 4)
 
     for i, ax in enumerate(axes.flatten()):
         ax.plot(time, force, 'r', label='force graph')
-        ax.plot(time, emg[:,i], 'b', label=f"emg graph sensor {i}")
+        ax.plot(time, emg[:, i], 'b', label=f"emg graph sensor {i}")
 
     # TODO make legend bigger
     handles, labels = plt.gca().get_legend_handles_labels()
