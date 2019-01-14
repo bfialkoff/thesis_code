@@ -8,9 +8,11 @@ from core.bll.features import Features
 two_pi = 2 * pi
 
 
-def line(array, x_axis=None, title=None, x_label=None, y_label=None):
+def line(array, x_axis=None, title=None, x_label=None, y_label=None, xlim=None):
     fig, axes1 = plt.subplots(1, 1)
 
+    if xlim is not None:
+        plt.xlim(xlim)
     if x_axis is not None:
         axes1.plot(x_axis, array)
     else:
@@ -25,9 +27,9 @@ def line(array, x_axis=None, title=None, x_label=None, y_label=None):
     plt.show()
 
 
-def scatter(emg, force, title=None, x_label=None, y_label=None):
+def scatter(force, emg, title=None, x_label=None, y_label=None):
     fig, ax = plt.subplots(1, 1)
-    ax.scatter(emg, force)
+    ax.scatter(force, emg, marker='o')
 
     if title:
         plt.title(title, fontsize=12)
