@@ -4,6 +4,7 @@ import numpy as np
 from scipy.signal import detrend
 
 from core.bll.features import Features
+from core.bll.converter import Converter
 from core.bll.preprocessing import Preprocessor
 from core.utils.plot import *
 
@@ -15,13 +16,14 @@ if __name__ == '__main__':
     emg = np.genfromtxt(my_signal.joinpath('emg.csv').resolve(), delimiter=',')[:, 0]
     fsr_voltage = np.genfromtxt(my_signal.joinpath('force.csv').resolve(), delimiter=',')
     sampling_frequency = 1980
+
     features = Features()
     preprocessor = Preprocessor()
-
+    converter = Converter()
     processed_emg = preprocessor.process_emg_signal(emg, sampling_frequency)
     processed_fsr_voltage = preprocessor.process_force_voltage_signal(fsr_voltage, sampling_frequency)
 
-    processed_force = preprocessor.convert_fsr_voltage_to_force(processed_fsr_voltage)
+    processed_force = converter.convert_fsr_voltage_to_force(processed_fsr_voltage)
 
     time_frequency, emg_dft = features.get_shifted_fft_and_frequency(sampling_frequency, detrend(emg))
     _, force_dft = features.get_shifted_fft_and_frequency(sampling_frequency, fsr_voltage)

@@ -1,9 +1,6 @@
-import pickle
-from pathlib import Path
 
-import numpy as np
 from scipy.signal import butter, lfilter, detrend, iirnotch
-from core.utils.linear_regression import linear_regression
+
 
 class Preprocessor:
     # usage: y = butter_lowpass_filter(data, cutoff, fs, order)
@@ -50,27 +47,4 @@ class Preprocessor:
         return lpf_force
 
 
-    def _get_line_coeffs(self):
-        path_to_line_coefficients = Path(__file__).joinpath('..', '..', '..', 'files', 'line_coeffs.pkl').resolve()
-        if not path_to_line_coefficients.exists():
-            force = np.array([50, 100, 262.5, 500, 1000, 2000, 4000, 7000, 10000])
-            resistance = np.array([10, 6.5, 3.33, 2.182, 1.227, 0.77, 0.471, 0.335, 0.25])
-            a, b = linear_regression(np.log10(resistance), np.log10(force))
-            with open(path_to_line_coefficients, 'wb') as f:
-                pickle.dump((a, b), f)
-        else:
-            with open(path_to_line_coefficients, 'rb') as f:
-                a, b = pickle.load(f)
-        return a, b
 
-    def convert_fsr_voltage_to_resistance(self, fsr_voltage):
-        Vcc = 5
-        Vreg = 2.5
-        fsr_resistance = (fsr_voltage - Vreg) / (Vreg - Vcc) * 10**3
-        return fsr_resistance
-
-    def convert_fsr_voltage_to_force(self, fsr_voltage):
-        a, b = self._get_line_coeffs()
-        fsr_resistance = self.convert_fsr_voltage_to_resistance(fsr_voltage)
-        log_force = a * np.log10(fsr_resistance) + b
-        return np.power(10, log_force)
