@@ -7,22 +7,24 @@ from core.bll.features import Features
 from core.bll.preprocessing import Preprocessor
 from core.utils.plot import *
 
-path_to_signals = Path(__file__).joinpath('..', 'signals').resolve()
+path_to_signals = Path(__file__).joinpath('..', 'files', 'signals').resolve()
 my_signal = path_to_signals.joinpath('signal1').resolve()
 
 # TODO, experiment with emg rectification
 if __name__ == '__main__':
     emg = np.genfromtxt(my_signal.joinpath('emg.csv').resolve(), delimiter=',')[:, 0]
-    force = np.genfromtxt(my_signal.joinpath('force.csv').resolve(), delimiter=',')
+    fsr_voltage = np.genfromtxt(my_signal.joinpath('force.csv').resolve(), delimiter=',')
     sampling_frequency = 1980
     features = Features()
     preprocessor = Preprocessor()
 
     processed_emg = preprocessor.process_emg_signal(emg, sampling_frequency)
-    processed_force = preprocessor.process_force_signal(force, sampling_frequency)
+    processed_fsr_voltage = preprocessor.process_force_signal(fsr_voltage, sampling_frequency)
+
+    processed_force = preprocessor.convert_fsr_voltage_to_force(processed_fsr_voltage)
 
     time_frequency, emg_dft = features.get_shifted_fft_and_frequency(sampling_frequency, detrend(emg))
-    _, force_dft = features.get_shifted_fft_and_frequency(sampling_frequency, force)
+    _, force_dft = features.get_shifted_fft_and_frequency(sampling_frequency, fsr_voltage)
     line(emg_dft, time_frequency, title='lpf_emg frequency spectrum', xlim=[-600, 600])
     line(force_dft, time_frequency, title='force signal frequency spectrum', xlim=[-20, 20])
 
