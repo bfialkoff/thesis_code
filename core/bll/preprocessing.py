@@ -45,7 +45,7 @@ class Preprocessor:
         notched_emg = self._notch_filter(lpf_emg, sampling_freq)
         return notched_emg
 
-    def process_force_signal(self, force, sampling_freq):
+    def process_force_voltage_signal(self, force, sampling_freq):
         lpf_force = self._butter_lowpass_filter(force, cutoff=10, sampling_freq=sampling_freq)
         return lpf_force
 
@@ -63,7 +63,14 @@ class Preprocessor:
                 a, b = pickle.load(f)
         return a, b
 
+    def convert_fsr_voltage_to_resistance(self, fsr_voltage):
+        Vcc = 5
+        Vreg = 2.5
+        fsr_resistance = (fsr_voltage - Vreg) / (Vreg - Vcc) * 10**3
+        return fsr_resistance
+
     def convert_fsr_voltage_to_force(self, fsr_voltage):
         a, b = self._get_line_coeffs()
-        log_force = a * np.log10(fsr_voltage) + b
+        fsr_resistance = self.convert_fsr_voltage_to_resistance(fsr_voltage)
+        log_force = a * np.log10(fsr_resistance) + b
         return np.power(10, log_force)

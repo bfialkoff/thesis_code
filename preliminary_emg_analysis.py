@@ -19,7 +19,7 @@ if __name__ == '__main__':
     preprocessor = Preprocessor()
 
     processed_emg = preprocessor.process_emg_signal(emg, sampling_frequency)
-    processed_fsr_voltage = preprocessor.process_force_signal(fsr_voltage, sampling_frequency)
+    processed_fsr_voltage = preprocessor.process_force_voltage_signal(fsr_voltage, sampling_frequency)
 
     processed_force = preprocessor.convert_fsr_voltage_to_force(processed_fsr_voltage)
 

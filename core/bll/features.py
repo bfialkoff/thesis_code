@@ -13,13 +13,13 @@ class Features:
     def get_vpp_signal(self, emg):
         get_vpp = lambda x: np.max(x) - np.min(x)
         #vpp_signal = self._get_sliding_window_signal(emg, get_vpp)
-        emg_split_list = np.array_split(emg, 9)
+        emg_split_list = np.array_split(emg, 15)
         vpp_signal = np.array([get_vpp(emg) for emg in emg_split_list])
         return vpp_signal
 
     def get_average_force_signal(self, force):
         #averaged_force_signal = self._get_sliding_window_signal(force, np.mean)
-        force_split_list = np.array_split(force, 9)
+        force_split_list = np.array_split(force, 15)
         averaged_force_signal = np.array([np.mean(force) for force in force_split_list])
         return averaged_force_signal
 
