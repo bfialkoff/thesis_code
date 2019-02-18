@@ -20,7 +20,7 @@ class Preprocessor:
         y = lfilter(filter_numerator, filter_denominator, noisy_signal)
         return y
 
-    def _notch_filter(self, signal, sampling_freq, cutoff=50,):
+    def _notch_filter(self, signal, sampling_freq, cutoff):
         '''
         this function recieves a signal as input and returns the signal after passing it through
         a butterworth low pass filter
@@ -35,16 +35,17 @@ class Preprocessor:
         y = lfilter(filter_numerator, filter_denominator, signal)
         return y
 
+    def process_force_signal(self, force, sampling_freq):
+        lpf_force = self._butter_lowpass_filter(force, sampling_freq=sampling_freq, cutoff=5)
+        return lpf_force
 
     def process_emg_signal(self, emg, sampling_freq):
         detrended_emg = detrend(emg)
-        lpf_emg = self._butter_lowpass_filter(detrended_emg, sampling_freq=sampling_freq, cutoff=450)
-        notched_emg = self._notch_filter(lpf_emg, sampling_freq)
+        lpf_emg = self._butter_lowpass_filter(detrended_emg, sampling_freq=sampling_freq, cutoff=400)
+        notched_emg = self._notch_filter(lpf_emg, sampling_freq, 50)
+        notched_emg = self._notch_filter(notched_emg, sampling_freq, 100)
         return notched_emg
 
-    def process_force_voltage_signal(self, force, sampling_freq):
-        lpf_force = self._butter_lowpass_filter(force, cutoff=10, sampling_freq=sampling_freq)
-        return lpf_force
 
 
 

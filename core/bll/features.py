@@ -10,6 +10,15 @@ class Features:
         signal = np.array([func(arr[i:i + window_size]) for i in index_points])
         return signal
 
+    @classmethod
+    def get_shifted_fft_and_frequency(cls, sampling_frequency, signal):
+        dft = np.abs(np.fft.fft(signal))
+        len_dft = len(dft)
+        discrete_frequency = np.arange(0, len_dft)
+        discrete_frequency[round(len_dft / 2):] = discrete_frequency[round(len_dft / 2):] - len_dft
+        time_frequency = (sampling_frequency / len_dft) * discrete_frequency
+        return time_frequency, dft
+
     def get_vpp_signal(self, emg):
         get_vpp = lambda x: np.max(x) - np.min(x)
         #vpp_signal = self._get_sliding_window_signal(emg, get_vpp)
@@ -23,10 +32,9 @@ class Features:
         averaged_force_signal = np.array([np.mean(force) for force in force_split_list])
         return averaged_force_signal
 
-    def get_shifted_fft_and_frequency(self, sampling_frequency, signal):
-        dft = np.abs(np.fft.fft(signal))
-        len_dft = len(dft)
-        discrete_frequency = np.arange(0, len_dft)
-        discrete_frequency[round(len_dft / 2):] = discrete_frequency[round(len_dft / 2):] - len_dft
-        time_frequency = (sampling_frequency / len_dft) * discrete_frequency
-        return time_frequency, dft
+
+
+    def linear_regression(self, x, y):
+        a, b = np.polyfit(x, y, 1)
+        r_squared = np.corrcoef(x,y)[0, 1]
+        return a, b, r_squared
