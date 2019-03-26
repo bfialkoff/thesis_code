@@ -2,6 +2,7 @@ from pathlib import Path
 
 import numpy as np
 
+
 class DataReader:
     path_to_signals = Path(__file__).joinpath('..', '..', '..', 'files', 'signals').resolve()
     my_signal = path_to_signals.joinpath('signal1').resolve()
