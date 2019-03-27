@@ -1,16 +1,38 @@
-from itertools import product
-
 import numpy as np
 
 
-def permute_difference(arr):
-    def _permute_difference(arr):
-        opts = np.array(list(product(arr, arr)))
-        d = (opts[:, 0] - opts[:, 1]).reshape(len(arr), -1)
-        return d
+def permute_axes_subtract(arr, axis=1):
+    """
+            calculates all the differences between all combinations
+            terms in the input array. output[i,j] = arr[i] - arr[j]
+            for every combination if ij.
 
-    if len(arr.shape) == 1 or arr.shape[1] == 1:
-        diffs = _permute_difference(arr)
-    else:
-        diffs = np.apply_along_axis(permute_difference, 1, arr)
-    return diffs
+            Parameters
+            ----------
+            arr numpy.array
+                a 1d input array
+
+            Returns
+            -------
+            numpy.array
+                a 2d array
+
+            Examples
+            --------
+            arr = [10, 11, 12]
+
+            diffs = [[ 0 -1 -2]
+                    [ 1  0 -1]
+                    [ 2  1  0]]
+            """
+    s = arr.shape
+    if arr.ndim == 1:
+        axis = 0
+
+    # Get broadcastable shapes by introducing singleton dimensions
+    s1 = np.insert(s, axis, 1)
+    s2 = np.insert(s, axis + 1, 1)
+
+    # Perform subtraction after reshaping input array to
+    # broadcastable ones against each other
+    return arr.reshape(s1) - arr.reshape(s2)
