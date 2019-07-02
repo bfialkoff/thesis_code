@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy
 import cv2
-# from tqdm import tqdm todo install tqdm
+from tqdm import tqdm
 from core.bll.converter import Converter
 from core.bll.data_reader import DataReader
 from core.bll.preprocessing import Preprocessor
@@ -18,16 +18,16 @@ todo
 """
 
 if __name__ == '__main__':
-    const = 1000
     sampling_frequency = 1980
-    data_reader = DataReader(1)
+    signal_number = 56
+    data_reader = DataReader(signal_number)
 
     raw_emg = data_reader.get_emg_signal(np.arange(7))
     fsr_voltage = data_reader.get_fsr_voaltage_signal()
     force = Converter().convert_fsr_voltage_to_force(fsr_voltage)
 
     emg = Preprocessor().process_emg_signal(raw_emg, sampling_frequency)
-    rms_emg = const * np.sqrt((emg ** 2) / len(emg))
+    rms_emg = np.sqrt((emg ** 2) / len(emg))
 
     _, emg_dft = Features().get_shifted_fft_and_frequency(sampling_frequency, emg)
     _, rms_emg_dft = Features().get_shifted_fft_and_frequency(sampling_frequency, rms_emg)
@@ -35,8 +35,8 @@ if __name__ == '__main__':
     nrms = permute_axes_subtract(emg)
     rms = permute_axes_subtract(rms_emg)
 
-    nrms_fft = permute_axes_subtract(emg_dft) * const
-    rms_fft = permute_axes_subtract(rms_emg_dft) * const
+    nrms_fft = permute_axes_subtract(emg_dft)
+    rms_fft = permute_axes_subtract(rms_emg_dft)
     force_mat = np.repeat(force, 2 * 49, axis=0).reshape((-1, 7, 14))
 
     # normalize and convert to uint8 for video writing
@@ -48,9 +48,9 @@ if __name__ == '__main__':
     shape = nrms.shape[0], 2 * nrms.shape[1], 2 * nrms.shape[1]
     combined = np.zeros(shape, dtype=np.uint8)
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter('test.avi', cv2.VideoWriter_fourcc('X', 'V', 'I', 'D'), sampling_frequency,
+    out = cv2.VideoWriter(f'{signal_number}.avi', cv2.VideoWriter_fourcc('X', 'V', 'I', 'D'), sampling_frequency,
                           (2 * nrms.shape[1], 2 * nrms.shape[1]), False)
-    for i, (nr, r, fnr, fr, fmat) in enumerate(zip(nrms, rms, nrms_fft, rms_fft, force_mat)):
+    for i, (nr, r, fnr, fr, fmat) in tqdm(enumerate(zip(nrms, rms, nrms_fft, rms_fft, force_mat))):
         combined[i, :7, :7] = r
         combined[i, :7, 7:] = fr
         combined[i, 7:, :] = fmat
