@@ -7,6 +7,7 @@ from core.bll.converter import Converter
 from core.bll.preprocessing import Preprocessor
 from core.bll.data_reader import DataReader
 from core.utils.plot import *
+from core.utils.array import permute_axes_subtract
 
 path_to_signals = Path(__file__).joinpath('..', 'files', 'signals').resolve()
 my_signal = path_to_signals.joinpath('signal1').resolve()
@@ -19,7 +20,7 @@ if __name__ == '__main__':
     preprocessor = Preprocessor()
     converter = Converter()
     data_reader = DataReader(1)
-    emg = data_reader.get_emg_signal(7)
+    emg = data_reader.get_emg_signal(4)
     fsr_voltage = data_reader.get_fsr_voaltage_signal()
     sampling_frequency = 1980
 

@@ -1,5 +1,5 @@
 # conda env create -f environment.yml
-# conda remove --name emg_force_analysis
+# conda remove -n emg_force_analysis (for windows conda remove --name emg_force_analysis --all
 # conda info --envs
 name: emg_force_analysis
 
@@ -9,3 +9,7 @@ dependencies:
   - numpy==1.15
   - scipy==1.1.0
   - pandas==0.23.4
+  - opencv==3.4.2
+  - scikit-learn==0.20.1
+  - pywavelets
+  - tqdm==4.32.1

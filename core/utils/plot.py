@@ -69,6 +69,22 @@ def frequency_spectrum(sampling_frequency, array):
     axes1.plot(time_frequency, np.abs(dft))
     plt.show()
 
+def frequency_spectrum_and_power(sampling_frequency, array):
+    time_frequency, dft = Features.get_shifted_fft_and_frequency(sampling_frequency, array)
+    variance = np.std(array) ** 2
+    print(variance)
+    variance = 1
+    fft_power = variance * dft ** 2  # FFT power spectrum
+
+    fig, axes1 = plt.subplots(1, 1)
+    axes1.plot(time_frequency, dft, 'r-', label='Fourier Transform')
+    axes1.plot(time_frequency, fft_power, 'k--', linewidth=1, label='FFT Power Spectrum', alpha=0.5)
+    axes1.set_xlabel('Frequency [Hz / year]', fontsize=18)
+    axes1.set_ylabel('Amplitude', fontsize=18)
+    axes1.legend()
+    plt.show()
+
+
 
 def regression_line_fourier_plot(coeffs, vpp_data, force_data, time_freq, emg_dft, r_squared=None):
     a, b = coeffs
