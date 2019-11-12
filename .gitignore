@@ -2,5 +2,8 @@
 **/.idea
 **/__pycache__
 *.pkl
-*.pdf
-*.avi
+**/*.pdf
+**/*.avi
+**/*.h5
+**/*.hdf5
+**/*.csv
