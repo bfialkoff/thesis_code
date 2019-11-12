@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pywavelets = "*"
+matplotlib = "*"
+numpy = "*"
+scipy = "*"
+pandas = "*"
+opencv-python = "*"
+scikit-learn = "*"
+tqdm = "*"
+keras = "*"
+tensorflow = "==1.14.0"
+mpmath = "*"
+tensorflow-probability = "==0.7.0"

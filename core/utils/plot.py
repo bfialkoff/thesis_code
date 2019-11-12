@@ -151,3 +151,11 @@ def plot_emg_force_all_sensors(force, emg):
     handles, labels = plt.gca().get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center')
     plt.show()
+
+def eval_seq2seq_prediction(ground_truth_signal, predicted_signal):
+    fig, ax = plt.subplots(1, 1)
+    discrete_time = range(len(ground_truth_signal))
+    ax.plot(discrete_time, ground_truth_signal, 'r', label='ground truth')
+    ax.plot(discrete_time, predicted_signal, 'b', label='prediction')
+    ax.legend()
+    plt.show()

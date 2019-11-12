@@ -1,3 +1,4 @@
+import warnings
 import pickle
 from pathlib import Path
 
@@ -30,7 +31,9 @@ class Converter:
     def convert_fsr_voltage_to_force(self, fsr_voltage):
         a, b = self._get_fsr_line_coeffs()
         fsr_resistance = self.convert_fsr_voltage_to_resistance(fsr_voltage)
-        log_force = a * np.log10(fsr_resistance) + b
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            log_force = a * np.log10(fsr_resistance) + b
         force = np.power(10, log_force)
         force = np.where(fsr_resistance < np.min(self.RESISTANCE), np.max(self.FORCE), force)
         force = np.where(fsr_resistance > np.max(self.RESISTANCE), np.min(self.FORCE), force)

@@ -11,7 +11,7 @@ from core.bll.data_reader import DataReader
 def get_latest_signal(signal_out_path):
     signals = [p for p in os.listdir(signal_out_path) if 'signal' in p]
     if not signals:
-        latest_signal = 1
+        latest_signal = 1 # switch to 0 next time to zero index files
     else:
         latest_signal = max(re.split('(\d+)', s)[1] for s in signals)
         latest_signal = int(latest_signal)
