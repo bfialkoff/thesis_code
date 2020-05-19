@@ -19,12 +19,12 @@ todo
 
 if __name__ == '__main__':
     sampling_frequency = 1980
-    signal_number = 56
+    signal_number = 57
     data_reader = DataReader(signal_number)
 
     raw_emg = data_reader.get_emg_signal(np.arange(7))
     fsr_voltage = data_reader.get_fsr_voaltage_signal()
-    force = Converter().convert_fsr_voltage_to_force(fsr_voltage)
+    force = Converter().fsr_voltage_to_force(fsr_voltage)
 
     emg = Preprocessor().process_emg_signal(raw_emg, sampling_frequency)
     rms_emg = np.sqrt((emg ** 2) / len(emg))

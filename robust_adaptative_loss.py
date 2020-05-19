@@ -13,7 +13,7 @@ class RobustAdaptativeLoss(object):
   def loss(self, y_true, y_pred):
     x = y_true - y_pred
     # x = K.reshape(x, shape=(-1, -1))
-    with tf.variable_scope("lossfun"): #, reuse=True):
+    with tf.variable_scope("lossfun", reuse=tf.AUTOREUSE):
       loss, alpha, scale = lossfun(x)
     op = K.update(self.v_alpha, alpha)
     # The alpha update must be part of the graph but it should

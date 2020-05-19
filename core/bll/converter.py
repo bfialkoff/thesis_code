@@ -24,13 +24,13 @@ class Converter:
                 a, b = pickle.load(f)
         return a, b
 
-    def convert_fsr_voltage_to_resistance(self, fsr_voltage):
+    def fsr_voltage_to_resistance(self, fsr_voltage):
         fsr_resistance = self.RESISTOR * (fsr_voltage - self.VREG) / (self.VREG - self.VCC)
         return fsr_resistance
 
-    def convert_fsr_voltage_to_force(self, fsr_voltage):
+    def fsr_voltage_to_force(self, fsr_voltage):
         a, b = self._get_fsr_line_coeffs()
-        fsr_resistance = self.convert_fsr_voltage_to_resistance(fsr_voltage)
+        fsr_resistance = self.fsr_voltage_to_resistance(fsr_voltage)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             log_force = a * np.log10(fsr_resistance) + b

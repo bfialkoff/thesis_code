@@ -13,10 +13,12 @@ class DataReader:
         self._signal = self.path_to_signals.joinpath(f'{self.signal_prefix}{signal_number}').resolve()
 
     def get_fsr_voaltage_signal(self):
-        fsr_voltage = np.genfromtxt(self._signal.joinpath(self.force_file_name).resolve(), delimiter=',')
+        signal_path = self._signal.joinpath(self.force_file_name).resolve()
+        fsr_voltage = np.genfromtxt(signal_path, delimiter=',')
         return fsr_voltage
 
     def get_emg_signal(self, channel=slice(0, 8)):
         """ return the emg signal from the channel given, supports array indexing"""
-        emg = np.genfromtxt(self._signal.joinpath(self.emg_file_name).resolve(), delimiter=',')[:, channel]
+        signal_path = self._signal.joinpath(self.emg_file_name).resolve()
+        emg = np.genfromtxt(signal_path, delimiter=',')[:, channel]
         return emg

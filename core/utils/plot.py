@@ -14,6 +14,13 @@ def multi_plot(*lines, ls='-'):
         ax[i].plot(line, ls)
     plt.show()
 
+def plot_emg(emg, sampling_freq, save_path, title):
+    time_axis = np.arange(len(emg)) / sampling_freq
+    plt.plot(time_axis, emg)
+    plt.title(title)
+    plt.xlabel('Time [sec]')
+    plt.ylabel('Voltage [V]')
+    plt.savefig(save_path)
 
 def line(array, x_axis=None, title=None, x_label=None, y_label=None, xlim=None, ls='-'):
     fig, axes1 = plt.subplots(1, 1)
@@ -69,6 +76,7 @@ def frequency_spectrum(sampling_frequency, array):
     axes1.plot(time_frequency, np.abs(dft))
     plt.show()
 
+
 def frequency_spectrum_and_power(sampling_frequency, array):
     time_frequency, dft = Features.get_shifted_fft_and_frequency(sampling_frequency, array)
     variance = np.std(array) ** 2
@@ -85,8 +93,7 @@ def frequency_spectrum_and_power(sampling_frequency, array):
     plt.show()
 
 
-
-def regression_line_fourier_plot(coeffs, vpp_data, force_data, time_freq, emg_dft, r_squared=None):
+def regression_line_fourier_plot(coeffs, vpp_data, force_data, time_freq, emg_dft, r_squared=None, save_path=None):
     a, b = coeffs
     min_x = np.min(vpp_data) - 2
     max_x = np.max(vpp_data) + 2
@@ -114,8 +121,10 @@ def regression_line_fourier_plot(coeffs, vpp_data, force_data, time_freq, emg_df
     ax1.legend()
     ax2.legend()
     plt.subplots_adjust(top=0.895, bottom=0.1, left=0.11, right=0.9, hspace=0.68, wspace=0.2)
-
-    plt.show()
+    if save_path:
+        plt.savefig(save_path)
+    else:
+        plt.show()
 
 
 def plot_emg_force(force, emg):
@@ -151,6 +160,7 @@ def plot_emg_force_all_sensors(force, emg):
     handles, labels = plt.gca().get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center')
     plt.show()
+
 
 def eval_seq2seq_prediction(ground_truth_signal, predicted_signal):
     fig, ax = plt.subplots(1, 1)
